@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Expense Tracker</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <h1>Expense Tracker</h1>
+    <label class="toggle" aria-label="Toggle dark mode">
+      <input id="darkToggle" type="checkbox" />
+      <span>Dark mode</span>
+    </label>
+  </header>
+
+  <section class="controls">
+    <div class="row">
+      <label>
+        <span>Month:</span>
+        <input id="monthFilter" type="month" />
+      </label>
+
+      <label>
+        <span>Budget:</span>
+        <input id="budgetInput" inputmode="decimal" type="number" step="0.01" min="0" placeholder="0.00" />
+      </label>
+
+      <button id="saveBudgetBtn" type="button">Save Budget</button>
+      <button id="exportBtn" type="button">Export CSV</button>
+      <button id="importBtn" type="button">Import CSV</button>
+      <input id="fileInput" type="file" accept=".csv" hidden />
+    </div>
+
+    <div class="progressBox" aria-live="polite">
+      <div class="progressHeader">
+        <span>Budget Progress</span>
+        <span id="progressText">0% of $0.00</span>
+      </div>
+      <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <div id="progressBar" class="progressBar"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2 id="formTitle">Add Transaction</h2>
+
+    <!-- Inline, single-row form (Date, Note, Amount, Type, Category, Savings, Add) -->
+    <form id="txn-form" autocomplete="off" novalidate>
+      <label>
+        <span>Date</span>
+        <input type="date" id="date" required />
+      </label>
+
+      <label>
+        <span>Note</span>
+        <input type="text" id="note" placeholder="Note" maxlength="80" required />
+      </label>
+
+      <label>
+        <span>Amount</span>
+        <input type="text" id="amount" placeholder="Amount" inputmode="decimal" required />
+      </label>
+
+      <label>
+        <span>Type</span>
+        <select id="type">
+          <option value="income">Income</option>
+          <option value="expense">Expense</option>
+        </select>
+      </label>
+
+      <label>
+        <span>Category</span>
+        <input type="text" id="category" placeholder="Category" maxlength="40" required />
+      </label>
+
+      <!-- Only used when Type = Income -->
+      <label id="savingsLabel" hidden>
+        <span>Savings</span>
+        <input type="text" id="savings" placeholder="Amount to save" inputmode="decimal" />
+      </label>
+
+      <div class="form-actions">
+        <button type="submit" id="submitBtn">Add</button>
+        <button type="button" id="cancelEditBtn" class="secondary" hidden>Cancel Edit</button>
+      </div>
+
+      <p id="formError" class="error" role="alert" hidden></p>
+    </form>
+  </section>
+
+  <section class="grid">
+    <div class="stat">
+      <div class="statLabel">Income (month)</div>
+      <div class="statValue">$<span id="income">0.00</span></div>
+    </div>
+
+    <div class="stat">
+      <div class="statLabel">Expenses (month)</div>
+      <div class="statValue">$<span id="expenses">0.00</span></div>
+    </div>
+
+    <div class="stat">
+      <div class="statLabel">Savings (month)</div>
+      <div class="statValue">$<span id="savingsTotal">0.00</span></div>
+    </div>
+
+    <div class="stat full">
+      <div class="statLabel">Balance (month)</div>
+      <div class="statValue">$<span id="balance">0.00</span></div>
+    </div>
+  </section>
+
+  <section class="card chartBox">
+    <div class="chartHeader">
+      <h2>Spending vs. Savings (month)</h2>
+      <span class="chartNote">Daily expenses and savings for the selected month</span>
+    </div>
+
+    <div class="chartLegend">
+      <span class="legend-dot legend-expense"></span> Expenses
+      <span class="legend-dot legend-savings"></span> Savings
+    </div>
+
+    <div class="chartWrap">
+      <svg id="trendChart" viewBox="0 0 640 280" role="img" aria-label="Daily expenses vs savings chart"></svg>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Transactions</h2>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Note</th>
+          <th>Type</th>
+          <th>Category</th>
+          <th class="num">Amount</th>
+          <th class="num">Savings</th>
+          <th class="sr-only">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="txn-tbody"></tbody>
+    </table>
+  </section>
+
+  <section class="card">
+    <h2>Category Summary (month)</h2>
+    <ul id="category-summary"></ul>
+  </section>
+
+  <!-- Single module entry; it imports the rest -->
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
